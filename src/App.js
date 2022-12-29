@@ -5,14 +5,14 @@ import imageCompression from "browser-image-compression";
 
 function App() {
   const [origImage, setOrigImage] = useState("");
-  const [origImageFile, setOrigImageFile] = useState("");
+  const [origImageFile, setOrigImageUrl] = useState("");
   const [compressedImage, setCompressedImage] = useState("");
   const [fileName, setFileImage] = useState("");
 
   const handle = (e) => {
     const imageFile = e.target.files[0];
     setOrigImage(imageFile);
-    setOrigImageFile(URL.createObjectURL(imageFile));
+    setOrigImageUrl(URL.createObjectURL(imageFile));
     setFileImage(imageFile.name);
   };
 
@@ -23,10 +23,7 @@ function App() {
       maxWidthOrHeight: 1920,
       useWebWorker: true,
     };
-    if (options.maxSizeMB >= origImage / 1024) {
-      alert("Your image is to big");
-      return 0;
-    }
+
     let output;
     imageCompression(origImage, options).then((x) => {
       output = x;
@@ -41,6 +38,7 @@ function App() {
       <h1></h1>
       <Container>
         <Grid>
+          {/* Original Image */}
           <Grid.Column width={6}>
             <Item>
               {origImage ? (
@@ -50,6 +48,8 @@ function App() {
               )}
             </Item>
           </Grid.Column>
+
+          {/* Button Section */}
           <Grid.Column width={4}>
             <input
               type="file"
@@ -71,12 +71,14 @@ function App() {
             {compressedImage && (
               <Button>
                 <a href={compressedImage} download={fileName}>
-                  {" "}
                   Download Image
                 </a>
               </Button>
             )}
           </Grid.Column>
+
+          {/* Compressed Image */}
+
           <Grid.Column width={6}>
             <Item>
               {compressedImage ? (
